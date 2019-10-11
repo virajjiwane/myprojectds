@@ -97,8 +97,46 @@
                 <center>
                     <br>
                     <br>
-                    <table>
+                    <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Sr. no</th>
+                            <th>Question</th>
+                            <th>Option A</th>
+                            <th>Option B</th>
+                            <th>Option C</th>
+                            <th>Option D</th>
+                            <th>Answer</th>
+                            <th>Marks</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>Sr. no</th>
+                            <th>Question</th>
+                            <th>Option A</th>
+                            <th>Option B</th>
+                            <th>Option C</th>
+                            <th>Option D</th>
+                            <th>Answer</th>
+                            <th>Marks</th>
+                        </tr>
+                        </tfoot>
+                        <tbody >
+                        {% for record in records %}
+                        <tr >
+                            <td>{{forloop.counter}}</td>
+                            <td>{{record.question}}</td>
+                            <td>{{record.optionA}}</td>
+                            <td>{{record.optionB}}</td>
+                            <td>{{record.optionC}}</td>
+                            <td>{{record.optionD}}</td>
+                            <td>{{record.answer}}</td>
+                            <td>{{record.marks}}</td>
+                        </tr>
+                        {%endfor%}
 
+                        </tbody>
                     </table>
                 </center>
 
