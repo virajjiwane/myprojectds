@@ -19,37 +19,36 @@ from .models import Questions
 def loginfun(request):
     username = request.POST.get('username', False)
     password = request.POST.get('password', False)
-    print(username)
     user = authenticate(request, username=username, password=password)
-    if user is None:
+    print(username)
+    if username is None:
         return HttpResponseRedirect('fail/')
-    if username != "hod":
+    if username == "hod":
+
+        count = Questions.objects.all().count()
+        max_marks = Questions.objects.all().aggregate(Max('marks'))
+        ques = Questions.objects.last().question
+        ans = Questions.objects.last().answer
+
+        login(request, user)
+        request.session['user'] = username
+        if ans == 1:
+            ans = Questions.objects.last().optionA
+        elif ans == 2:
+            ans = Questions.objects.last().optionB
+        elif ans == 3:
+            ans = Questions.objects.last().optionC
+        elif ans == 4:
+            ans = Questions.objects.last().optionD
+        return render(request, 'index.html', {
+            'count': count,
+            'max_marks': max_marks['marks__max'],
+            'ques': ques,
+            'ans': ans,
+            'name': username
+        })
+    else:
         return HttpResponseRedirect('register/')
-
-
-
-    count = Questions.objects.all().count()
-    max_marks = Questions.objects.all().aggregate(Max('marks'))
-    ques = Questions.objects.last().question
-    ans = Questions.objects.last().answer
-
-    login(request, user)
-    request.session['user'] = username
-    if ans == 1:
-        ans = Questions.objects.last().optionA
-    elif ans == 2:
-        ans = Questions.objects.last().optionB
-    elif ans == 3:
-        ans = Questions.objects.last().optionC
-    elif ans == 4:
-        ans = Questions.objects.last().optionD
-    return render(request, 'index.html', {
-        'count': count,
-        'max_marks': max_marks['marks__max'],
-        'ques': ques,
-        'ans': ans,
-        'name': username
-    })
 
 
 def dash(request):
@@ -58,29 +57,29 @@ def dash(request):
     #user = authenticate(request, username=username, password=password)
     #if user is None:
     #    return HttpResponseRedirect('/fail')
+    username = request.POST.get('username', False)
+    if username is "hod":
+        count = Questions.objects.all().count()
+        max_marks = Questions.objects.all().aggregate(Max('marks'))
+        ques = Questions.objects.last().question
+        ans = Questions.objects.last().answer
+        if ans == 1:
+            ans = Questions.objects.last().optionA
+        elif ans == 2:
+            ans = Questions.objects.last().optionB
+        elif ans == 3:
+            ans = Questions.objects.last().optionC
+        elif ans == 4:
+            ans = Questions.objects.last().optionD
+        return render(request, 'index.html', {
+            'count': count,
+            'max_marks': max_marks['marks__max'],
+            'ques': ques,
+            'ans': ans,
+            'name': username
+        })
 
-
-    count = Questions.objects.all().count()
-    max_marks = Questions.objects.all().aggregate(Max('marks'))
-    ques = Questions.objects.last().question
-    ans = Questions.objects.last().answer
-    if ans == 1:
-        ans = Questions.objects.last().optionA
-    elif ans == 2:
-        ans = Questions.objects.last().optionB
-    elif ans == 3:
-        ans = Questions.objects.last().optionC
-    elif ans == 4:
-        ans = Questions.objects.last().optionD
-    name = request.session['user']
-    return render(request, 'index.html', {
-        'count': count,
-        'max_marks': max_marks['marks__max'],
-        'ques': ques,
-        'ans': ans,
-        'name': name
-    })
-
+    return HttpResponseRedirect('/fail/')
 
 
 @csrf_protect
