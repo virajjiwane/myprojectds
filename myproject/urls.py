@@ -22,7 +22,7 @@ urlpatterns = [
     #path('',form),
     path('admin/', admin.site.urls),
     path('dash/', dash),
-    path('success', success),
+    path('register/success/', success),
     path('dash/generate/', generate),
     path('', include("django.contrib.auth.urls")),
     path('fail/', fail),

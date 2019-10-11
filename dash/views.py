@@ -19,9 +19,15 @@ from .models import Questions
 def loginfun(request):
     username = request.POST.get('username', False)
     password = request.POST.get('password', False)
+    print(username)
     user = authenticate(request, username=username, password=password)
     if user is None:
-        return HttpResponseRedirect('/fail')
+        return HttpResponseRedirect('fail/')
+    if username != "hod":
+        return HttpResponseRedirect('register/')
+
+
+
     count = Questions.objects.all().count()
     max_marks = Questions.objects.all().aggregate(Max('marks'))
     ques = Questions.objects.last().question
@@ -53,6 +59,7 @@ def dash(request):
     #if user is None:
     #    return HttpResponseRedirect('/fail')
 
+
     count = Questions.objects.all().count()
     max_marks = Questions.objects.all().aggregate(Max('marks'))
     ques = Questions.objects.last().question
@@ -75,29 +82,29 @@ def dash(request):
     })
 
 
-from .heartDisease import classify_patient
 
-
+@csrf_protect
+@never_cache
 def form(request):
     # if this is a POST request we need to process the form data
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        forma = Form(request.POST)
+        form = Form(request.POST)
         # check whether it's valid:
-        if forma.is_valid():
+        if form.is_valid():
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-            forma.save()
+            form.save()
             return HttpResponseRedirect('success/')
 
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        forma = Form()
+        form = Form()
 
-    return render(request, 'register.html', {'form': forma})
+    return render(request, 'register.html', {'form': form})
 
 
 def success(request):
