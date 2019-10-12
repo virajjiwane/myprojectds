@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from dash.views import dash, form, success, generate, fail, que_ans_module, loginfun
+from dash.views import dash, form, success, generate, fail, que_ans_module, loginfun, generate_ques_paper
 from django.contrib.auth import views
 urlpatterns = [
     path('',views.LoginView.as_view(template_name="registration/login.html")),
@@ -28,10 +28,9 @@ urlpatterns = [
     path('fail/', fail),
     path('dashboard/', dash),
     path('register/', form),
-    path('QueAns', que_ans_module),
+    path('QueAns/', que_ans_module),
     path('logout', views.LoginView.as_view(template_name="registration/login.html")),
     path('login', loginfun),
-
-
+    path('generatepaper/',generate_ques_paper),
 
 ]

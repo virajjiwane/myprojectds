@@ -12,6 +12,8 @@ from .forms import Form
 from .models import Questions
 
 
+token = 1
+
 # Create your views here.
 @csrf_protect
 @never_cache
@@ -86,11 +88,14 @@ def dash(request):
 @never_cache
 def form(request):
     # if this is a POST request we need to process the form data
-
+    global token
+    if token is 0:
+        return render(request, 'register.html', {'form': Form(),'msg':'Database currently locked'})
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = Form(request.POST)
         # check whether it's valid:
+
         if form.is_valid():
             # process the data in form.cleaned_data as required
             # ...
@@ -103,7 +108,7 @@ def form(request):
     else:
         form = Form()
 
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'register.html', {'form': form,'msg':'Database is online'})
 
 
 def success(request):
@@ -126,6 +131,8 @@ def generate(request):
 
     p.showPage()
     p.save()
+    global token
+    token = 1
     return response
 
 
@@ -135,4 +142,11 @@ def fail(request):
 
 def que_ans_module(request):
     records = Questions.objects.all()
+    print(records)
     return render(request, 'QueAns.html', {'records': records})
+
+def generate_ques_paper(request):
+    global token
+    token = 0
+    records = Questions.objects.all()
+    return render(request,'GenerateQueAns.html', {'records': records})
